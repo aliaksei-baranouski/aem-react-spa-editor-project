@@ -1,14 +1,55 @@
 import React, {Component} from 'react';
-import {Button, Form} from 'react-bootstrap';
+import {Button, Form, Modal} from 'react-bootstrap';
 
-export default class CustomForm extends Component {
+export default class FormWithModal extends Component {
+    state = {
+        isOpen: false
+    };
+
+    showModal = () => {
+        this.setState({isOpen: true});
+        const self = this;
+        setTimeout(function() {
+            self.hideModal();
+        }, 10000);
+    };
+
+    hideModal = () => {
+        this.setState({isOpen: false});
+    };
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        //TODO: Send the form
+        this.showModal();
+
+        // const { firstName, lastName, email } = this.state;
+        // const data = {
+        //     firstName,
+        //     lastName,
+        //     email
+        // };
+        // axios
+        //     .post("/api/AddForm", data, {
+        //         headers: { "Content-Type": "application/json" }
+        //     })
+        //     .then(res => {
+        //         console.log(res.data);
+        //         this.setState({
+        //             message: res.data.message
+        //         });
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     });
+    };
 
     render() {
         return (
             <div>
                 <h2>Fill out the form</h2>
                 <h3>Have one of our specialists contact you</h3>
-                <Form>
+                <Form onSubmit={this.handleSubmit}>
                     <Form.Group controlId="firstname">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control type="text" placeholder="First Name" required/>
@@ -38,6 +79,20 @@ export default class CustomForm extends Component {
                         Submit
                     </Button>
                 </Form>
+
+                <Button variant="primary" onClick={() => this.showModal()}>
+                    SHOW
+                </Button>
+
+                <Modal
+                    size="lg"
+                    show={this.state.isOpen}
+                    onHide={() => void 0}>
+                    <Modal.Header>
+                        <Modal.Title>Large Modal</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Collected Data</Modal.Body>
+                </Modal>
             </div>
         );
     }
