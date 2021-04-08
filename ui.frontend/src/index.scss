@@ -19,6 +19,8 @@
 /* Normalize */
 @import '~normalize-scss/sass/normalize';
 
+@import "~bootstrap/scss/bootstrap";
+
 @import './styles/variables';
 
 body {
