@@ -1,7 +1,16 @@
 import React, {Component} from 'react';
 import {Button, Form, Modal, Table} from 'react-bootstrap';
+import {MapTo} from '@adobe/aem-react-editable-components';
 
-export default class FormWithModal extends Component {
+export const FormWithModalEditConfig = {
+    emptyLabel: 'FormWithModal',
+
+    isEmpty: function (props) {
+        return !props || !props.heading || props.heading.trim().length < 1;
+    }
+};
+
+class FormWithModal extends Component {
     state = {
         isOpen: false,
         customer: {
@@ -31,38 +40,22 @@ export default class FormWithModal extends Component {
         this.setState({customer: customer});
     };
 
-
     handleSubmit = (e) => {
         e.preventDefault();
         //TODO: Send the form
         this.showModal();
-
-        // const { firstName, lastName, email } = this.state;
-        // const data = {
-        //     firstName,
-        //     lastName,
-        //     email
-        // };
-        // axios
-        //     .post("/api/AddForm", data, {
-        //         headers: { "Content-Type": "application/json" }
-        //     })
-        //     .then(res => {
-        //         console.log(res.data);
-        //         this.setState({
-        //             message: res.data.message
-        //         });
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
+        //TODO: Reset form
     };
 
     render() {
+        if(FormWithModalEditConfig.isEmpty(this.props)) {
+            return null;
+        }
+
         return (
             <div>
-                <h2>Fill out the form</h2>
-                <h3>Have one of our specialists contact you</h3>
+                <h2>{this.props.heading}</h2>
+                <h3>{this.props.subheading}</h3>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group controlId="firstname">
                         <Form.Label>First Name</Form.Label>
@@ -98,7 +91,7 @@ export default class FormWithModal extends Component {
                     </Button>
                 </Form>
 
-                <Button variant="primary" onClick={() => this.showModal()}>
+                <Button variant="secondary" onClick={() => this.showModal()}> {/*TODO: remove it*/}
                     SHOW
                 </Button>
 
@@ -140,3 +133,5 @@ export default class FormWithModal extends Component {
         );
     }
 }
+
+export default MapTo('wknd-spa-react/components/form-with-modal')(FormWithModal, FormWithModalEditConfig);
