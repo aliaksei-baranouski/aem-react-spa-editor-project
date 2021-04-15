@@ -13,6 +13,7 @@ export const FormWithModalEditConfig = {
 class FormWithModal extends Component {
     state = {
         isOpen: false,
+        seconds: 10,
         customer: {
             firstname: "",
             lastname: "",
@@ -25,6 +26,10 @@ class FormWithModal extends Component {
     showModal = () => {
         this.setState({isOpen: true});
         const self = this;
+        this.myInterval = setInterval(() => {
+            this.setState(({seconds}) => ({
+                seconds: seconds - 1
+            }))}, 1000)
         setTimeout(function () {
             self.hideModal();
         }, 10000);
@@ -32,7 +37,9 @@ class FormWithModal extends Component {
 
     hideModal = () => {
         this.setState({isOpen: false});
+        clearInterval(this.myInterval);
     };
+
 
     handleFormChange(e) {
         let customer = this.state.customer;
@@ -42,13 +49,29 @@ class FormWithModal extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        //TODO: Send the form
+
+        //TODO: Adobe Granite CSRF Filter
+        try {
+            const response = fetch("/bin/salesforce", {
+                method: 'POST',
+                body: JSON.stringify(this.state.customer),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log('Data sent successfully:', JSON.stringify(response));
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
         this.showModal();
+
         //TODO: Reset form
+        //e.target.reset();
     };
 
     render() {
-        if(FormWithModalEditConfig.isEmpty(this.props)) {
+        if (FormWithModalEditConfig.isEmpty(this.props)) {
             return null;
         }
 
@@ -91,10 +114,6 @@ class FormWithModal extends Component {
                     </Button>
                 </Form>
 
-                <Button variant="secondary" onClick={() => this.showModal()}> {/*TODO: remove it*/}
-                    SHOW
-                </Button>
-
                 <Modal
                     size="lg"
                     show={this.state.isOpen}
@@ -128,6 +147,9 @@ class FormWithModal extends Component {
                             </tbody>
                         </Table>
                     </Modal.Body>
+                    <Modal.Footer>
+                        <p><small>This popup will close automatically after {this.state.seconds} seconds.</small></p>
+                    </Modal.Footer>
                 </Modal>
             </div>
         );
