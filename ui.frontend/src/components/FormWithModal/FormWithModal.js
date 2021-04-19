@@ -53,7 +53,6 @@ class FormWithModal extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        //TODO: Adobe Granite CSRF Filter
         try {
             const response = await fetch("/bin/salesforce", {
                 method: 'POST',
@@ -71,9 +70,7 @@ class FormWithModal extends Component {
         }
 
         this.showModal();
-
-        //TODO: Reset form
-        //e.target.reset();
+        e.target.reset();
     };
 
     render() {
