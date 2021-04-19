@@ -52,6 +52,7 @@ class FormWithModal extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+        e.persist();
 
         try {
             const response = await fetch("/bin/salesforce", {
